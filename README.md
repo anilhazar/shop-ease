@@ -12,6 +12,70 @@ ShopEase is a comprehensive e-commerce application designed to provide seamless 
 - **BCrypt**: For password encryption
 - **Maven**: For project management and dependency management
 
+## Project Package Structure
+- src
+  - main
+    - java
+      - com
+        - shopease
+          - ShopeaseApplication.java
+          - authentication
+            - dto
+            - service
+            - exception
+            - controller
+          - cart
+            - cartitem
+              - service
+              - exception
+              - repository
+              - controller
+              - model
+            - service
+            - repository
+            - exception
+            - model
+            - controller
+          - common
+            - entity
+            - config
+            - util
+              - exception
+          - customer
+            - service
+            - repository
+            - model
+            - exception
+            - controller
+          - order
+            - orderitem
+              - service
+              - repository
+              - model
+              - exception
+              - controller
+            - service
+            - repository
+            - model
+            - exception
+            - controller
+          - product
+            - service
+            - repository
+            - model
+            - exception
+            - controller
+          - util
+            - exception
+            - entity
+    - resources
+      - sql
+        - sqlscript.sql
+      - static
+      - templates
+      - application.yml
+
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:

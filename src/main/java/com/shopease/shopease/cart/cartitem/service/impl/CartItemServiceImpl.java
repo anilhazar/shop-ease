@@ -75,6 +75,7 @@ class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    @Transactional
     public void removeCartItem(String id) {
         CartItemEntity cartItem = cartItemRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new CartItemNotFoundException("Cart item not found with id " + id));

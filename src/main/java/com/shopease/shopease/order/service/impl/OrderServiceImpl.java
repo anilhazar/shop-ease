@@ -13,6 +13,7 @@ import com.shopease.shopease.product.exception.ProductNotFoundException;
 import com.shopease.shopease.product.model.entity.ProductEntity;
 import com.shopease.shopease.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +28,15 @@ public class OrderServiceImpl implements OrderService {
         this.productRepository = productRepository;
     }
 
+
+    @Override
+    public void createOrder(OrderRequest orderRequest) {
+
+        OrderEntity orderEntity = OrderMapper.toEntity(orderRequest);
+        orderEntity.setTotalPrice(BigDecimal.ZERO);
+        orderRepository.save(orderEntity);
+    }
+
     private BigDecimal calculateTotalPrice(OrderEntity order) {
 
         BigDecimal totalPrice = BigDecimal.ZERO;
@@ -36,14 +46,8 @@ public class OrderServiceImpl implements OrderService {
         return totalPrice;
     }
 
-    public void createOrder(OrderRequest orderRequest) {
-
-        OrderEntity orderEntity = OrderMapper.toEntity(orderRequest);
-        orderEntity.setTotalPrice(BigDecimal.ZERO);
-        orderRepository.save(orderEntity);
-    }
-
     @Override
+    @Transactional
     public void placeOrder(String id) {
 
         OrderEntity order = orderRepository.findById(id).

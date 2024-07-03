@@ -14,6 +14,7 @@ import com.shopease.shopease.order.repository.OrderRepository;
 import com.shopease.shopease.product.model.entity.ProductEntity;
 import com.shopease.shopease.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,6 +34,7 @@ class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
+    @Transactional
     public void createOrderItem(OrderItemRequest orderItemRequest) {
         ProductEntity product = validateProductAndStock(orderItemRequest);
 

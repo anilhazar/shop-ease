@@ -11,9 +11,6 @@ import com.shopease.shopease.cart.cartitem.repository.CartItemRepository;
 import com.shopease.shopease.cart.cartitem.service.CartItemService;
 import com.shopease.shopease.cart.model.entity.CartEntity;
 import com.shopease.shopease.cart.repository.CartRepository;
-import com.shopease.shopease.common.util.StockValidator;
-import com.shopease.shopease.product.model.entity.ProductEntity;
-import com.shopease.shopease.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +22,11 @@ import java.util.Optional;
 class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
 
-    public CartItemServiceImpl(CartItemRepository cartItemRepository, CartRepository cartRepository, ProductRepository productRepository) {
+    public CartItemServiceImpl(CartItemRepository cartItemRepository, CartRepository cartRepository) {
         this.cartItemRepository = cartItemRepository;
         this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
+
     }
 
     @Override
@@ -81,7 +77,7 @@ class CartItemServiceImpl implements CartItemService {
                 .orElseThrow(() -> new CartItemNotFoundException("Cart item not found with id " + id));
 
         if (cartItem.getIsDeleted()) {
-            throw new RuntimeException("Cart item already deleted with id: " + id);
+            throw new InvalidCartItemException("Cart item already deleted with id: " + id);
         }
         cartItem.setIsDeleted(true);
         cartItemRepository.save(cartItem);
@@ -90,29 +86,6 @@ class CartItemServiceImpl implements CartItemService {
         cart.getItems().removeIf(item -> item.getId().equals(id));
         cart.setTotalPrice(calculateTotalPrice(cart));
         cartRepository.save(cart);
-    }
-
-    private ProductEntity validateProductAndStock(CartItemRequest cartItemRequest) {
-        ProductEntity product = productRepository.findById(cartItemRequest.getProductId())
-                .orElseThrow(() -> new InvalidCartItemException("Product not found with id: " + cartItemRequest.getProductId()));
-
-        StockValidator.validateStock(product, cartItemRequest.getQuantity());
-
-        return product;
-    }
-
-    private CartItemEntity buildCartItem(CartItemRequest cartItemRequest, ProductEntity product, CartEntity cart) {
-        return CartItemEntity.builder()
-                .cart(cart)
-                .product(product)
-                .quantity(cartItemRequest.getQuantity())
-                .price(product.getPrice())
-                .build();
-    }
-
-    private void updateProductStock(ProductEntity product, Long quantity) {
-        product.setStock(product.getStock() - quantity);
-        productRepository.save(product);
     }
 
     private BigDecimal calculateTotalPrice(CartEntity cart) {

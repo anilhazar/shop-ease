@@ -96,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with id " + id));
 
         if (order.getIsDeleted()) {
-            throw new RuntimeException("Order already deleted with id: " + id);
+            throw new OrderNotFoundException("Order already deleted with id: " + id);
         }
         order.setIsDeleted(true);
         orderRepository.save(order);

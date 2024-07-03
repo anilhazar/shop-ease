@@ -119,7 +119,7 @@ class OrderItemServiceImpl implements OrderItemService {
                 .orElseThrow(() -> new OrderItemNotFoundException("Order item not found with id " + id));
 
         if (orderItem.getIsDeleted()) {
-            throw new RuntimeException("Order item already deleted with id: " + id);
+            throw new InvalidOrderItemException("Order item already deleted with id: " + id);
         }
         orderItem.setIsDeleted(true);
         orderItemRepository.save(orderItem);

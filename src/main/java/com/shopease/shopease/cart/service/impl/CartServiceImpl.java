@@ -1,6 +1,7 @@
 package com.shopease.shopease.cart.service.impl;
 
 import com.shopease.shopease.cart.exception.CartNotFoundException;
+import com.shopease.shopease.cart.exception.InvalidCartException;
 import com.shopease.shopease.cart.model.dto.CartRequest;
 import com.shopease.shopease.cart.model.dto.CartResponse;
 import com.shopease.shopease.cart.model.entity.CartEntity;
@@ -51,7 +52,7 @@ class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new CartNotFoundException("Cart not found with id " + id));
 
         if (cart.getIsDeleted()) {
-            throw new RuntimeException("Cart already deleted with id: " + id);
+            throw new InvalidCartException("Cart already deleted with id: " + id);
         }
 
         cart.setIsDeleted(true);
